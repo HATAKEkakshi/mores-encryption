@@ -1,10 +1,7 @@
 # mores-encryption
 
-![PyPI - Version](https://img.shields.io/pypi/v/mores-encryption?style=for-the-badge&color=blue)
-![PyPI - Python Version](https://img.shields.io/pypi/pyversions/mores-encryption?style=for-the-badge&color=blue)
-![License](https://img.shields.io/pypi/l/mores-encryption?style=for-the-badge&color=green)
-![Build Status](https://img.shields.io/github/actions/workflow/status/HATAKEkakshi/mores-encryption/publish.yml?style=for-the-badge&label=Build)
-
+![Python](https://img.shields.io/badge/Language-Python-blue?style=for-the-badge&logo=python&logoColor=white)
+![Encryption](https://img.shields.io/badge/Encryption-AES--128-green?style=for-the-badge)
 
 Lightweight, production-grade encryption library for Python.
 
