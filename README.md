@@ -2,6 +2,7 @@
 
 ![Python](https://img.shields.io/badge/Language-Python-blue?style=for-the-badge&logo=python&logoColor=white)
 ![Encryption](https://img.shields.io/badge/Encryption-AES--128-green?style=for-the-badge)
+[![PyPI](https://img.shields.io/badge/PyPI-View_Package-blue?style=for-the-badge&logo=pypi&logoColor=white)](https://pypi.org/project/mores-encryption/)
 
 Lightweight, production-grade encryption library for Python.
 
