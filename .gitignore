@@ -1,4 +1,11 @@
 venv/
 .env
-test.ipynb
-pyproject.toml
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+dist/
+build/
+*.egg-info/
+.pytest_cache/
