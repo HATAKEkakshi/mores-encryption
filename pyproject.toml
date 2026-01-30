@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mores-encryption"
-version = "0.1.4"
+version = "0.1.5"
 description = "Lightweight, production-grade AES/Fernet encryption & deterministic hashing library."
 readme = "README.md"
 authors = [
