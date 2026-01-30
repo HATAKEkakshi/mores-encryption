@@ -3,7 +3,7 @@ import sys
 import unittest
 from unittest.mock import patch
 from cryptography.fernet import Fernet
-from mores_encryption.encryption import EncryptionService
+
 # --- Path Setup ---
 # Add the project root to sys.path to allow importing the 'mores_encryption' package.
 # Structure:
@@ -16,6 +16,8 @@ from mores_encryption.encryption import EncryptionService
 current_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.dirname(current_dir)
 sys.path.append(project_root)
+
+from mores_encryption.encryption import EncryptionService
 
 
 
@@ -148,6 +150,64 @@ class TestEncryptionService(unittest.TestCase):
         
         self.assertIsNone(EncryptionService._cipher, "Cipher should be None after reset")
         self.assertIsNone(EncryptionService._key, "Key should be None after reset")
+
+
+    def test_encrypt_decrypt_json_dict(self):
+        """Verifies encryption and decryption of a complex dictionary."""
+        data = {
+            "key1": "value1",
+            "key2": 123,
+            "key3": True,
+            "key4": None
+        }
+        encrypted = EncryptionService.encrypt_json(data)
+        
+        self.assertIsInstance(encrypted, str)
+        self.assertNotEqual(encrypted, str(data))
+        
+        decrypted = EncryptionService.decrypt_json(encrypted)
+        self.assertEqual(data, decrypted)
+
+    def test_encrypt_decrypt_json_list(self):
+        """Verifies encryption and decryption of a list."""
+        data = ["item1", 100, 3.14]
+        encrypted = EncryptionService.encrypt_json(data)
+        
+        decrypted = EncryptionService.decrypt_json(encrypted)
+        self.assertEqual(data, decrypted)
+
+    def test_encrypt_json_custom_object(self):
+        """Verifies that non-JSON types are handled via default=str (if applicable)."""
+        # Because we use default=str, this should technically work by converting the set to a string representation
+        # However, json.loads won't turn it back into a set, it will be a string.
+        # Let's verify this behavior.
+        data = {"myset": {1, 2, 3}}
+        encrypted = EncryptionService.encrypt_json(data)
+        decrypted = EncryptionService.decrypt_json(encrypted)
+        
+        # Original: {1, 2, 3} (set)
+        # serialized: "{1, 2, 3}" (string representation of the set)
+        self.assertIsInstance(decrypted['myset'], str)
+        # Set string representation order is not guaranteed, so we just check it is a string
+    
+    def test_decrypt_json_invalid(self):
+        """Verifies behavior when decrypting invalid data."""
+        # Using simple 'encrypt' on non-json string, then trying to 'decrypt_json' it 
+        # might fail in json.loads if the string isn't valid JSON.
+        not_json_plaintext = "Just simple text"
+        encrypted = EncryptionService.encrypt(not_json_plaintext)
+        
+        with self.assertRaises(Exception):
+            EncryptionService.decrypt_json(encrypted)
+
+    def test_decrypt_json_empty(self):
+        """Verifies behavior when decrypting result of empty encryption."""
+        # encrypt("") returns ""
+        encrypted_empty = EncryptionService.encrypt("")
+        
+        # decrypt_json("") should return None as per implementation
+        result = EncryptionService.decrypt_json(encrypted_empty)
+        self.assertIsNone(result)
 
 
 if __name__ == '__main__':

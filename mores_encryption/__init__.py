@@ -1,4 +1,4 @@
 from .encryption import EncryptionService, encryption_service
 
 __all__ = ["EncryptionService", "encryption_service"]
-__version__ = "0.1.3"
+__version__ = "0.1.4"

@@ -1,7 +1,8 @@
 import base64
 import logging
 import os
-from typing import Optional
+import json
+from typing import Optional, Any
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
@@ -138,6 +139,47 @@ class EncryptionService:
             logger.critical(f"Decryption failed: {e}")
             raise
     
+    @staticmethod
+    def encrypt_json(data: Any) -> str:
+        """
+        Encrypts a JSON-serializable object (dict, list, etc.) by converting it to a string first.
+
+        Args:
+            data (Any): The data to encrypt (must be JSON serializable).
+
+        Returns:
+            str: The URL-safe Base64-encoded ciphertext.
+        """
+        try:
+            json_str = json.dumps(data, default=str)
+            return EncryptionService.encrypt(json_str)
+        except Exception as e:
+            logger.critical(f"JSON encryption failed: {e}")
+            raise
+
+    @staticmethod
+    def decrypt_json(encrypted_data: str) -> Any:
+        """
+        Decrypts a ciphertext string and parses it back into a Python object (dict, list, etc.).
+
+        Args:
+            encrypted_data (str): The ciphertext string to decrypt.
+
+        Returns:
+            Any: The original Python object.
+
+        Raises:
+            Exception: If decryption or JSON parsing fails.
+        """
+        try:
+            json_str = EncryptionService.decrypt(encrypted_data)
+            if not json_str:
+                return None
+            return json.loads(json_str)
+        except Exception as e:
+            logger.critical(f"JSON decryption failed: {e}")
+            raise
+
     @staticmethod
     def hash(data: str, salt: str, iterations: int = 200_000) -> str:
         """
